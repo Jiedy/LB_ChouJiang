@@ -50,44 +50,55 @@
           </div>
         </template>
         <div
-          v-for="(value, index) in winningResult"
-          :key="index"
-          style="margin: 20px"
+          :style="{
+            'max-height': luckdrawH - 170 + 'px',
+            overflow: 'auto',
+            display: 'flex',
+            'flex-direction': 'column',
+            'align-items': 'center',
+          }"
         >
-          <el-popover
-            placement="bottom"
-            :width="160"
-            :visible="visibleClearItem && index == currentPressIndex"
+          <div
+            v-for="(value, index) in winningResult"
+            :key="index"
+            class="winning-rst-item"
+            :id="'winning-rst-item' + index"
           >
-            <p>确定删除该中奖结果吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button
-                size="mini"
-                type="text"
-                @click="visibleClearItem = false"
-                >取消</el-button
-              >
-              <el-button
-                type="primary"
-                size="mini"
-                @click="deleteWinningItem(index)"
-                >确定</el-button
-              >
-            </div>
-            <template #reference>
-              <div class="winning-text">
-                <div style="font-size: 50px; color: #009fff">{{ value }}</div>
-                <div
-                  class="el-icon-close"
-                  style="color: #009fff"
-                  @click="
-                    visibleClearItem = true;
-                    currentPressIndex = index;
-                  "
-                ></div>
+            <el-popover
+              placement="bottom"
+              :width="160"
+              :visible="visibleClearItem && index == currentPressIndex"
+            >
+              <p>确定删除该中奖结果吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="visibleClearItem = false"
+                  >取消</el-button
+                >
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="deleteWinningItem(index)"
+                  >确定</el-button
+                >
               </div>
-            </template>
-          </el-popover>
+              <template #reference>
+                <div class="winning-text">
+                  <div style="font-size: 50px; color: #009fff">{{ value }}</div>
+                  <div
+                    class="el-icon-close"
+                    style="color: #009fff"
+                    @click="
+                      visibleClearItem = true;
+                      currentPressIndex = index;
+                    "
+                  ></div>
+                </div>
+              </template>
+            </el-popover>
+          </div>
         </div>
       </el-card>
     </div>
@@ -375,6 +386,16 @@ export default defineComponent({
       this.reSetGiftMaxNumber();
       this.initLi();
       this.initLuckdraw();
+    },
+    winningResult: {
+      handler(newVar: Array<string>, oldVar: Array<string>) {
+        this.$nextTick(() => {
+          document
+            .getElementById(`winning-rst-item${newVar.length - 1}`)
+            ?.scrollIntoView();
+        });
+      },
+      deep: true,
     },
   },
   beforeMount() {
@@ -933,18 +954,24 @@ export default defineComponent({
   flex-direction: column;
   border-right: 1px gray solid;
 }
-.set-param .el-radio__input.is-checked+.el-radio__label{
+.set-param .el-radio__input.is-checked + .el-radio__label {
   color: #88b9ec !important;
 }
 .winning-rst {
   margin-top: 20px;
   width: 360px;
 }
-.winning-rst .el-card{
-  background-color:#FF868E !important;
+.winning-rst .el-card {
+  background-color: #ff868e !important;
 }
-.winning-rst .el-button--text{
-  color:#8dc5ff !important;
+.winning-rst .el-button--text {
+  color: #8dc5ff !important;
+}
+.winning-rst-item {
+  margin-top: 20px;
+}
+.winning-rst-item:first-child {
+  margin-top: 0;
 }
 .winning-text {
   display: flex;
@@ -954,6 +981,7 @@ export default defineComponent({
   border: 1px #bfe3ff solid;
   border-radius: 7px;
   padding: 10px;
+  width: 250px;
 }
 .card-header {
   display: flex;
