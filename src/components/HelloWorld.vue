@@ -372,7 +372,6 @@
 import { ref, defineComponent } from "vue";
 import $ from "jquery";
 import Gift from "./Gift.vue";
-import { TIMEOUT } from "node:dns";
 
 export default defineComponent({
   name: "HelloWorld",
